@@ -3,6 +3,7 @@ import {Component} from 'react'
 import Popup from 'reactjs-popup'
 import 'reactjs-popup/dist/index.css'
 import {RiCloseLine} from 'react-icons/ri'
+import PlayerChoice from '../PlayerChoice'
 
 import Button from '../Button'
 import {
@@ -17,10 +18,37 @@ import {
   ModalBg,
   ModalCloseButton,
   ModalImage,
+  PlayerLabel,
+  ResultText,
+  PlayAgainButton,
 } from './styledComponents'
 
+const gameStatusList = {
+  initial: 'STATED',
+  won: 'YOU WON',
+  draw: 'IT IS DRAW',
+  lost: 'YOU LOSE',
+}
+
 class PlayingView extends Component {
-  state = {score: 0}
+  state = {
+    score: 0,
+    playersChoice: '',
+    opponentsChoice: '',
+    gameStatus: gameStatusList.initial,
+  }
+
+  componentDidMount() {
+    this.generateOpponentsChoice()
+  }
+
+  generateOpponentsChoice = () => {
+    const {choicesList} = this.props
+    const opponentsChoice =
+      choicesList[Math.floor(Math.random() * choicesList.length)].id
+    this.setState({opponentsChoice})
+    console.log(opponentsChoice)
+  }
 
   topContainer = choicesList => {
     const {score} = this.state
@@ -51,13 +79,117 @@ class PlayingView extends Component {
     </GameButtonContainer>
   )
 
+  onClickPlayAgain = () => {
+    this.setState(
+      {
+        gameStatus: gameStatusList.initial,
+      },
+      this.generateOpponentsChoice(),
+    )
+  }
+
+  selectPlayersChoice = id => {
+    const {opponentsChoice, score} = this.state
+
+    switch (id) {
+      case 'ROCK':
+        if (opponentsChoice === 'PAPER') {
+          this.setState({
+            score: score - 1,
+            gameStatus: gameStatusList.lost,
+            playersChoice: id,
+          })
+        } else if (opponentsChoice === 'SCISSORS') {
+          this.setState({
+            score: score + 1,
+            gameStatus: gameStatusList.won,
+            playersChoice: id,
+          })
+        } else {
+          this.setState({gameStatus: gameStatusList.draw, playersChoice: id})
+        }
+        break
+      case 'PAPER':
+        if (opponentsChoice === 'SCISSORS') {
+          this.setState({
+            score: score - 1,
+            gameStatus: gameStatusList.lost,
+            playersChoice: id,
+          })
+        } else if (opponentsChoice === 'ROCK') {
+          this.setState({
+            score: score + 1,
+            gameStatus: gameStatusList.won,
+            playersChoice: id,
+          })
+        } else {
+          this.setState({gameStatus: gameStatusList.draw, playersChoice: id})
+        }
+        break
+      case 'SCISSORS':
+        if (opponentsChoice === 'ROCK') {
+          this.setState({
+            score: score - 1,
+            gameStatus: gameStatusList.lost,
+            playersChoice: id,
+          })
+        } else if (opponentsChoice === 'PAPER') {
+          this.setState({
+            score: score + 1,
+            gameStatus: gameStatusList.won,
+            playersChoice: id,
+          })
+        } else {
+          this.setState({gameStatus: gameStatusList.draw, playersChoice: id})
+        }
+        break
+      default:
+        console.log('default case')
+    }
+  }
+
+  GameResultView = choicesList => {
+    const {playersChoice, opponentsChoice, gameStatus} = this.state
+    const opponent = choicesList.find(item => item.id === opponentsChoice)
+    const player = choicesList.find(item => item.id === playersChoice)
+
+    return (
+      <>
+        <GameButtonContainer>
+          <li>
+            <PlayerLabel>YOU</PlayerLabel>
+            <PlayerChoice buttonDetails={player} altText="your choice" />
+          </li>
+          <li>
+            <PlayerLabel>OPPONENT</PlayerLabel>
+            <PlayerChoice buttonDetails={opponent} altText="opponent choice" />
+          </li>
+
+          <ResultText>{gameStatus}</ResultText>
+          <PlayAgainButton type="button" onClick={this.onClickPlayAgain}>
+            PLAY AGAIN
+          </PlayAgainButton>
+        </GameButtonContainer>
+      </>
+    )
+  }
+
+  switchViews = choicesList => {
+    const {gameStatus} = this.state
+
+    if (gameStatus === gameStatusList.initial) {
+      return this.gameContainer(choicesList)
+    }
+    return this.GameResultView(choicesList)
+  }
+
   render() {
     const {choicesList} = this.props
 
     return (
       <MainContainer>
         {this.topContainer(choicesList)}
-        {this.gameContainer(choicesList)}
+        {this.switchViews(choicesList)}
         <Popup
           trigger={<RulesButton type="button">Rules</RulesButton>}
           modal

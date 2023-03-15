@@ -11,8 +11,8 @@ const Button = props => {
   const altText = `${id.toLowerCase()}Button`
   return (
     <li>
-      <GameButton type="button" data-testid={altText}>
-        <ButtonImage alt={id} src={imageUrl} onClick={onCLickButton} />
+      <GameButton type="button" onClick={onCLickButton} data-testid={altText}>
+        <ButtonImage alt={id} src={imageUrl} />
       </GameButton>
     </li>
   )

@@ -87,3 +87,32 @@ export const ModalCloseButton = styled.button`
 export const ModalImage = styled.img`
   width: 100%;
 `
+export const PlayerLabel = styled.h1`
+  font-family: 'Roboto';
+  font-size: 24px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+`
+export const ResultText = styled.p`
+  font-family: 'Roboto';
+  font-size: 28px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+`
+
+export const PlayAgainButton = styled.button`
+  background-color: #ffffff;
+  border-radius: 6px;
+  border-style: none;
+  font-family: 'Bree Serif';
+  font-size: 20px;
+  font-weight: 500;
+  color: #223a5f;
+  width: 150px;
+  padding: 10px;
+  align-self: center;
+  cursor: pointer;
+  margin-bottom: 30px;
+`
