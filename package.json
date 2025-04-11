@@ -3,9 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "engines": {
-    "node": "22.x",
-    "npm": ">=6"
-  },
+  "node": ">=18.0.0",
+  "pnpm": ">=8.6.0"
+},
   "dependencies": {
     "@craco/craco": "6.2.0",
     "@testing-library/jest-dom": "5.11.9",
